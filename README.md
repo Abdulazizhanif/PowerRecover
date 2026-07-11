@@ -20,6 +20,12 @@ folder.
 - Includes a GUI app, command-line app, test kit, and bootable USB package
   files.
 
+## Screenshots
+
+![PowerRecover main screen](docs/screenshots/powerrecover-main-ui.png)
+
+![Preview and recovery panel](docs/screenshots/powerrecover-preview-panel.png)
+
 ## Safety First
 
 PowerRecover is designed to read from the source and write recovered files to a
