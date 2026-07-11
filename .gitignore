@@ -1,0 +1,60 @@
+# Build output
+bin/
+obj/
+publish/
+release/
+artifacts/
+TestResults/
+
+# Local copied app builds
+PowerRecover_FIXED_FOLDER_BUTTON/
+PowerRecover_FOLDER_SCAN_V*/
+PowerRecover_PRO_ASSISTANT_V*/
+PowerRecover_PRO_REVIEWED_V*/
+
+# Recovery output and local scans
+PowerRecover_Output/
+Recovered/
+RecoveredFiles/
+RecoveryOutput/
+*.scanlog
+*.recovery-report.*
+
+# Disk images and large generated recovery data
+*.vhd
+*.vhdx
+*.iso
+*.img
+*.dd
+*.raw
+*.E01
+*.001
+
+# Keep the small intentional test images in the test folders
+!PowerRecover.Tests/test_images/*.img
+
+# Visual Studio and user files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+
+# Intentional junk samples used by the test kit
+!TestRecoveryKit/ExpectedFiles/debug_log_junk.log
+!TestRecoveryKit/LiveFolderSamples/JunkToIgnore/debug_junk.log
+!TestRecoveryKit/LiveFolderSamples/JunkToIgnore/desktop.ini

@@ -1,0 +1,10 @@
+<svg width="840" height="220" viewBox="0 0 840 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="220" height="220" rx="48" fill="#0067C0"/>
+  <path d="M110 33L170 57V106C170 144 146 177 110 188C74 177 50 144 50 106V57L110 33Z" fill="#E8F0FB"/>
+  <path d="M110 54L151 70V107C151 135 135 160 110 170C85 160 69 135 69 107V70L110 54Z" fill="#FFFFFF"/>
+  <path d="M130 90C123 82 113 79 103 81C87 85 77 101 81 117C85 133 101 143 117 139C127 137 135 130 139 121" stroke="#0067C0" stroke-width="13" stroke-linecap="round"/>
+  <path d="M139 80V108H111" stroke="#0067C0" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M90 125H130" stroke="#00A6A6" stroke-width="12" stroke-linecap="round"/>
+  <text x="254" y="101" fill="#101828" font-family="Segoe UI, Arial, sans-serif" font-size="54" font-weight="700">PowerRecover</text>
+  <text x="258" y="149" fill="#667085" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="500">Safe file recovery for real data</text>
+</svg>

@@ -1,0 +1,707 @@
+﻿<Window x:Class="PowerRecover.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="PowerRecover" Height="760" Width="1260"
+        MinHeight="560" MinWidth="820"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource AppBg}"
+        FontFamily="{StaticResource UIFont}">
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="44"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="28"/>
+    </Grid.RowDefinitions>
+
+    <!-- TITLE BAR -->
+    <Border Grid.Row="0"
+            Background="{StaticResource SurfaceWhite}"
+            BorderBrush="{StaticResource Border}"
+            BorderThickness="0,0,0,1">
+      <Grid Margin="14,0">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+          <Border Width="26" Height="26" CornerRadius="6"
+                  Background="{StaticResource Accent}" Margin="0,0,10,0">
+            <Viewbox Margin="4">
+              <Grid Width="32" Height="32">
+                <Path Fill="#E8F0FB"
+                      Data="M16,2 L27,6.5 L27,15.5 C27,22 22.5,28 16,30 C9.5,28 5,22 5,15.5 L5,6.5 Z"/>
+                <Path Fill="White"
+                      Data="M16,5.5 L24,8.8 L24,15.7 C24,20.6 20.9,25 16,26.8 C11.1,25 8,20.6 8,15.7 L8,8.8 Z"/>
+                <Path Stroke="{StaticResource Accent}" StrokeThickness="3"
+                      StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                      Data="M19.7,11.8 C18.2,10.3 15.9,9.7 13.8,10.3 C10.4,11.2 8.4,14.7 9.3,18.1 C10.2,21.5 13.7,23.5 17.1,22.6 C19.1,22.1 20.7,20.7 21.5,18.9 M21.3,9.8 L21.3,16.4 L14.7,16.4"/>
+                <Path Stroke="#00A6A6" StrokeThickness="2.7"
+                      StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                      Data="M11.3,19.5 L20.2,19.5"/>
+              </Grid>
+            </Viewbox>
+          </Border>
+          <TextBlock Text="PowerRecover" FontSize="13" FontWeight="SemiBold"
+                     Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center"/>
+          <TextBlock Text="  -  File Recovery" FontSize="12"
+                     Foreground="{StaticResource TextMuted}" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Orientation="Horizontal"
+                    HorizontalAlignment="Center" VerticalAlignment="Center">
+          <Ellipse x:Name="PulseDot" Width="7" Height="7"
+                   Fill="{StaticResource Accent}" Margin="0,0,7,0"/>
+          <TextBlock x:Name="HeaderStatsLabel"
+                     Text="Ready - choose a recovery path"
+                     FontSize="11" Foreground="{StaticResource TextMuted}"/>
+        </StackPanel>
+
+        <Border Grid.Column="2" CornerRadius="3"
+                Background="{StaticResource AccentLight}"
+                Padding="8,3" VerticalAlignment="Center">
+          <TextBlock Text="SAFE READ-ONLY SCAN" FontSize="10"
+                     FontWeight="SemiBold" Foreground="{StaticResource AccentText}"/>
+        </Border>
+      </Grid>
+    </Border>
+
+    <!-- BODY -->
+    <Grid Grid.Row="1">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="270" MinWidth="230" MaxWidth="310"/>
+        <ColumnDefinition Width="*" MinWidth="360"/>
+        <ColumnDefinition Width="250" MinWidth="220" MaxWidth="290"/>
+      </Grid.ColumnDefinitions>
+
+      <!-- LEFT SIDEBAR -->
+      <Border Grid.Column="0"
+              Background="{StaticResource SurfaceWhite}"
+              BorderBrush="{StaticResource Border}"
+              BorderThickness="0,0,1,0">
+        <DockPanel>
+
+          <!-- Actions pinned to bottom -->
+          <StackPanel DockPanel.Dock="Bottom" Margin="12,0,12,14">
+            <Button x:Name="ScanButton"
+                    Content="Find my files"
+                    Style="{StaticResource PrimaryButton}"
+                    HorizontalAlignment="Stretch" Height="36"
+                    Margin="0,0,0,5" Click="OnScan"/>
+            <Button x:Name="StopButton" Content="Stop scan"
+                    Style="{StaticResource GhostButton}"
+                    HorizontalAlignment="Stretch" Height="30"
+                    Margin="0,0,0,5" IsEnabled="False" Click="OnStop"/>
+            <Button x:Name="ReportButton" Content="Save recovery report"
+                    Style="{StaticResource GhostButton}"
+                    HorizontalAlignment="Stretch" Height="30"
+                    IsEnabled="False" Click="OnExportReport"/>
+          </StackPanel>
+
+          <ScrollViewer VerticalScrollBarVisibility="Auto"
+                        HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="12,14,12,10">
+
+              <!-- SOURCE -->
+              <TextBlock Text="WHERE TO SEARCH" Style="{StaticResource SectionLabel}"
+                         Margin="2,0,0,6"/>
+              <TextBox x:Name="SourceBox" Height="42" Margin="0,0,0,8"
+                       FontSize="12"
+                       Padding="8,2"
+                       ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"
+                       Foreground="{StaticResource TextPrimary}"
+                       Background="{StaticResource SurfaceWhite}"/>
+              <Grid Margin="0,0,0,14">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*"/>
+                  <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto"/>
+                  <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Button Grid.Column="0" Content="Drive"
+                        Style="{StaticResource GhostButton}"
+                        Padding="0,5" Margin="0,0,3,0" Click="OnPickDrive"/>
+                <Button Grid.Column="1" Content="Disk image"
+                        Style="{StaticResource GhostButton}"
+                        Padding="0,5" Margin="3,0,0,0" Click="OnPickImage"/>
+                <Button Grid.Row="1" Grid.Column="0" Content="Folder"
+                        Style="{StaticResource GhostButton}"
+                        Padding="0,5" Margin="0,6,3,0" Click="OnPickFolder"/>
+                <Button Grid.Row="1" Grid.Column="1" Content="Make copy"
+                        Style="{StaticResource GhostButton}"
+                        Padding="0,5" Margin="3,6,0,0" Click="OnImageDrive"/>
+              </Grid>
+
+              <!-- SCAN MODE -->
+              <TextBlock Text="HOW TO SEARCH" Style="{StaticResource SectionLabel}"
+                         Margin="2,0,0,6"/>
+              <ComboBox x:Name="ModeBox" SelectedIndex="0"
+                        Height="34" Margin="0,0,0,14">
+                <ComboBoxItem Content="Recommended search"/>
+                <ComboBoxItem Content="Raw file search"/>
+                <ComboBoxItem Content="Full search"/>
+                <ComboBoxItem Content="Quick search"/>
+              </ComboBox>
+
+              <!-- OUTPUT -->
+              <TextBlock Text="SAVE RECOVERED FILES TO" Style="{StaticResource SectionLabel}"
+                         Margin="2,0,0,6"/>
+              <Grid Margin="0,0,0,14">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*"/>
+                  <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="OutputBox" Grid.Column="0" Height="42"
+                         FontSize="12"
+                         Padding="8,2"
+                         ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"
+                         Margin="0,0,5,0"
+                         Foreground="{StaticResource TextPrimary}"
+                         Background="{StaticResource SurfaceWhite}"/>
+                <Button Grid.Column="1" Content="…"
+                        Style="{StaticResource GhostButton}"
+                        Width="32" Padding="0" Click="OnPickOutput"/>
+              </Grid>
+
+              <!-- FILE TYPES -->
+              <Grid Margin="0,0,0,6">
+                <TextBlock Text="FILE TYPES" Style="{StaticResource SectionLabel}"
+                           Margin="2,0,0,0" VerticalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                  <Button Content="All" Style="{StaticResource GhostButton}"
+                          Padding="7,2" FontSize="11" Click="OnSelectAllTypes"/>
+                  <Button Content="None" Style="{StaticResource GhostButton}"
+                          Padding="7,2" FontSize="11" Margin="3,0,0,0"
+                          Click="OnSelectNoneTypes"/>
+                </StackPanel>
+              </Grid>
+              <Border BorderBrush="{StaticResource BorderLight}"
+                      BorderThickness="1" CornerRadius="5"
+                      Background="{StaticResource SurfaceWhite}"
+                      MaxHeight="148" Margin="0,0,0,14">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="6,4">
+                  <StackPanel x:Name="TypePanel"/>
+                </ScrollViewer>
+              </Border>
+
+              <Border Height="1" Background="{StaticResource BorderLight}"
+                      Margin="0,2,0,10"/>
+
+              <!-- TOOLS -->
+              <TextBlock Text="EXTRA TOOLS" Style="{StaticResource SectionLabel}"
+                         Margin="2,0,0,8"/>
+              <Button Content="Inspect raw disk data" Style="{StaticResource NavButton}"
+                      HorizontalAlignment="Stretch" Click="OnOpenHexViewer"/>
+              <Button Content="Show file location on disk" Style="{StaticResource NavButton}"
+                      HorizontalAlignment="Stretch" Margin="0,2,0,0"
+                      Click="OnShowOnDisk"/>
+              <Button Style="{StaticResource NavButton}"
+                      HorizontalAlignment="Stretch" Margin="0,2,0,0"
+                      Click="OnOpenTimeline">
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock Text="File activity timeline"/>
+                  <Border CornerRadius="8" Background="{StaticResource AccentLight}"
+                          Padding="5,1" Margin="6,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="NEW" FontSize="9" FontWeight="Bold"
+                               Foreground="{StaticResource AccentText}"/>
+                  </Border>
+                </StackPanel>
+              </Button>
+
+              <Border Height="1" Background="{StaticResource BorderLight}"
+                      Margin="0,10,0,10"/>
+
+              <!-- ADVANCED collapsed -->
+              <Expander Header="Advanced recovery options" FontSize="12"
+                        Foreground="{StaticResource TextMuted}"
+                        BorderThickness="0">
+                <StackPanel Margin="0,6,0,0">
+                  <Button Content="Recover from multiple drives" Style="{StaticResource NavButton}"
+                          HorizontalAlignment="Stretch" Click="OnRaidSetup"/>
+                  <Button Content="Unlock protected drive" Style="{StaticResource NavButton}"
+                          HorizontalAlignment="Stretch" Margin="0,2,0,0"
+                          Click="OnUnlockEncrypted"/>
+                  <Button Content="Lock protected drive" Style="{StaticResource NavButton}"
+                          HorizontalAlignment="Stretch" Margin="0,2,0,0"
+                          Click="OnLockEncrypted"/>
+                  <Button Content="Search Windows backups" Style="{StaticResource NavButton}"
+                          HorizontalAlignment="Stretch" Margin="0,2,0,0"
+                          Click="OnShowShadowCopies"/>
+                  <Button Content="Find recently deleted names" Style="{StaticResource NavButton}"
+                          HorizontalAlignment="Stretch" Margin="0,2,0,0"
+                          Click="OnScanJournal"/>
+                </StackPanel>
+              </Expander>
+
+            </StackPanel>
+          </ScrollViewer>
+        </DockPanel>
+      </Border>
+
+      <!-- MAIN PANEL -->
+      <Grid Grid.Column="1">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="*"/>
+          <RowDefinition Height="140"/>
+        </Grid.RowDefinitions>
+
+        <!-- Recovery assistant -->
+        <Border Grid.Row="0"
+                Background="{StaticResource SurfaceWhite}"
+                BorderBrush="{StaticResource Border}"
+                BorderThickness="0,0,0,1"
+                Padding="14,12">
+          <StackPanel>
+            <StackPanel>
+              <TextBlock Text="Recovery Assistant"
+                         FontSize="16"
+                         FontWeight="SemiBold"
+                         Foreground="{StaticResource TextPrimary}"/>
+              <TextBlock Text="Choose the closest situation. You can still adjust everything from the left panel."
+                         FontSize="12"
+                         Foreground="{StaticResource TextMuted}"
+                         TextWrapping="Wrap"
+                         Margin="0,3,0,10"/>
+
+              <WrapPanel>
+                <Button Style="{StaticResource GhostButton}"
+                        Width="180"
+                        MinHeight="66"
+                        Margin="0,0,8,8"
+                        Padding="12,10"
+                        Click="OnWizardDeleted">
+                  <StackPanel>
+                    <TextBlock Text="Recover deleted files"
+                               FontWeight="SemiBold"
+                               FontSize="13"
+                               TextWrapping="Wrap"/>
+                    <TextBlock Text="Scan a drive for lost files"
+                               Foreground="{StaticResource TextMuted}"
+                               FontSize="11"
+                               TextWrapping="Wrap"
+                               Margin="0,3,0,0"/>
+                  </StackPanel>
+                </Button>
+                <Button Style="{StaticResource GhostButton}"
+                        Width="180"
+                        MinHeight="66"
+                        Margin="0,0,8,8"
+                        Padding="12,10"
+                        Click="OnWizardFolder">
+                  <StackPanel>
+                    <TextBlock Text="Check a folder"
+                               FontWeight="SemiBold"
+                               FontSize="13"
+                               TextWrapping="Wrap"/>
+                    <TextBlock Text="Preview and copy existing files"
+                               Foreground="{StaticResource TextMuted}"
+                               FontSize="11"
+                               TextWrapping="Wrap"
+                               Margin="0,3,0,0"/>
+                  </StackPanel>
+                </Button>
+                <Button Style="{StaticResource GhostButton}"
+                        Width="180"
+                        MinHeight="66"
+                        Margin="0,0,8,8"
+                        Padding="12,10"
+                        Click="OnWizardImage">
+                  <StackPanel>
+                    <TextBlock Text="Use disk image"
+                               FontWeight="SemiBold"
+                               FontSize="13"
+                               TextWrapping="Wrap"/>
+                    <TextBlock Text="Search a backup or raw image"
+                               Foreground="{StaticResource TextMuted}"
+                               FontSize="11"
+                               TextWrapping="Wrap"
+                               Margin="0,3,0,0"/>
+                  </StackPanel>
+                </Button>
+              </WrapPanel>
+            </StackPanel>
+
+            <Border
+                    Background="{StaticResource SuccessLight}"
+                    BorderBrush="#CDE8D0"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="12,9"
+                    MaxWidth="420"
+                    HorizontalAlignment="Left"
+                    Margin="0,2,0,0"
+                    VerticalAlignment="Top">
+              <StackPanel>
+                <TextBlock Text="Safe recovery rule"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource Success}"
+                           FontSize="12"/>
+                <TextBlock Text="Scan read-only. Save recovered files to a different folder or drive."
+                           Foreground="{StaticResource TextSecond}"
+                           FontSize="11"
+                           TextWrapping="Wrap"
+                           Margin="0,3,0,0"/>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </Border>
+
+        <!-- Filter bar -->
+        <Border Grid.Row="1"
+                Background="{StaticResource SurfaceWhite}"
+                BorderBrush="{StaticResource Border}"
+                BorderThickness="0,0,0,1" Padding="12,7">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+              <ComboBox x:Name="FilterStatusCombo" Width="110" Height="28"
+                        FontSize="12" SelectedIndex="0"
+                        Margin="0,0,8,6"
+                        SelectionChanged="OnFilterStatusChanged">
+                <ComboBoxItem Content="All files"/>
+                <ComboBoxItem Content="Deleted only"/>
+                <ComboBoxItem Content="Still exists"/>
+              </ComboBox>
+
+              <TextBlock Text="File quality:" FontSize="12"
+                         Foreground="{StaticResource TextMuted}"
+                         VerticalAlignment="Center" Margin="0,0,6,6"/>
+              <TextBox x:Name="MinConfBox" Width="54" Height="34"
+                       Text="70" FontSize="13" Padding="8,2"
+                       Foreground="{StaticResource TextPrimary}"
+                       Margin="0,0,3,6"
+                       TextChanged="OnMinConfidenceChanged"/>
+              <TextBlock Text="%" FontSize="12"
+                         Foreground="{StaticResource TextMuted}"
+                         VerticalAlignment="Center" Margin="0,0,12,6"/>
+
+              <TextBlock Text="Search results:" FontSize="12"
+                         Foreground="{StaticResource TextMuted}"
+                         VerticalAlignment="Center" Margin="0,0,6,6"/>
+              <Border CornerRadius="5" Background="{StaticResource SurfaceGray}"
+                      BorderBrush="{StaticResource Border}"
+                      BorderThickness="1" Padding="7,0"
+                      Margin="0,0,8,6">
+                <TextBox x:Name="FilterSearchBox" Width="120" Height="26"
+                         BorderThickness="0" Background="Transparent"
+                         Foreground="{StaticResource TextPrimary}"
+                         FontSize="12" VerticalAlignment="Center"
+                         TextChanged="OnFilterTextChanged"/>
+              </Border>
+
+              <Button Content="Reset" Style="{StaticResource GhostButton}"
+                      Padding="10,4" FontSize="12" Margin="0,0,0,6"
+                      Click="OnClearFilters"/>
+            </WrapPanel>
+
+            <TextBlock x:Name="FilterStatsLabel"
+                       Grid.Column="1"
+                       HorizontalAlignment="Right" VerticalAlignment="Center"
+                       FontSize="12" Foreground="{StaticResource TextMuted}"
+                       Margin="10,0,0,6"/>
+          </Grid>
+        </Border>
+
+        <!-- Results grid -->
+        <Border Grid.Row="2" Background="{StaticResource SurfaceWhite}">
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="14,8,14,6">
+              <TextBlock Text="Files found" FontSize="13" FontWeight="SemiBold"
+                         Foreground="{StaticResource TextPrimary}"
+                         VerticalAlignment="Center"/>
+              <StackPanel Orientation="Horizontal"
+                          HorizontalAlignment="Right" VerticalAlignment="Center">
+                <TextBlock x:Name="CountLabel" Text="0" FontSize="12"
+                           FontWeight="SemiBold" Foreground="{StaticResource Accent}"/>
+                <TextBlock Text=" files found" FontSize="12"
+                           Foreground="{StaticResource TextMuted}"/>
+              </StackPanel>
+            </Grid>
+            <DataGrid x:Name="ResultsGrid" Grid.Row="1"
+                      AutoGenerateColumns="False" IsReadOnly="True"
+                      SelectionMode="Extended"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto"
+                      EnableRowVirtualization="True"
+                      VirtualizingPanel.IsVirtualizing="True"
+                      VirtualizingPanel.VirtualizationMode="Recycling"
+                      SelectionChanged="OnResultsSelectionChanged">
+              <DataGrid.Columns>
+                <DataGridTextColumn Header="Name"   Binding="{Binding Name}"           Width="2*" MinWidth="160"/>
+                <DataGridTextColumn Header="Type"   Binding="{Binding Ext}"            Width="55" MinWidth="45"/>
+                <DataGridTextColumn Header="Size"   Binding="{Binding SizeText}"       Width="75" MinWidth="65"/>
+                <DataGridTextColumn Header="Found by" Binding="{Binding Method}"      Width="105" MinWidth="85"/>
+                <DataGridTextColumn Header="State" Binding="{Binding Status}"         Width="80" MinWidth="70"/>
+                <DataGridTextColumn Header="Quality" Binding="{Binding ConfidenceText}" Width="75" MinWidth="65"/>
+                <DataGridTextColumn Header="Folder" Binding="{Binding FolderPath}"    Width="*" MinWidth="120"/>
+                <DataGridTextColumn Header="Disk location" Binding="{Binding OffsetHex}"  Width="110" MinWidth="95"/>
+              </DataGrid.Columns>
+            </DataGrid>
+          </Grid>
+        </Border>
+
+        <!-- Activity log -->
+        <Border Grid.Row="3" Background="{StaticResource SurfaceGray}"
+                BorderBrush="{StaticResource Border}" BorderThickness="0,1,0,0">
+          <DockPanel Margin="14,8,14,8">
+            <TextBlock DockPanel.Dock="Top" Text="Scan messages"
+                       FontSize="11" FontWeight="SemiBold"
+                       Foreground="{StaticResource TextMuted}" Margin="0,0,0,5"/>
+            <TextBox x:Name="LogBox" IsReadOnly="True"
+                     Background="Transparent" BorderThickness="0"
+                     Foreground="{StaticResource TextSecond}"
+                     FontFamily="{StaticResource MonoFont}" FontSize="11"
+                     VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"/>
+          </DockPanel>
+        </Border>
+      </Grid>
+
+      <!-- RIGHT DETAIL PANEL -->
+      <Border Grid.Column="2" Background="{StaticResource SurfaceWhite}"
+              BorderBrush="{StaticResource Border}" BorderThickness="1,0,0,0">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+          <StackPanel Margin="16,16,16,16">
+
+            <!-- Selected file section -->
+            <TextBlock Text="SELECTED FILE" Style="{StaticResource SectionLabel}"
+                       Margin="0,0,0,10"/>
+
+            <!-- File name — updates on selection -->
+            <TextBlock x:Name="DetailFileName"
+                       Text="No file selected"
+                       FontSize="13" FontWeight="SemiBold"
+                       Foreground="{StaticResource TextSecond}"
+                       TextWrapping="Wrap" TextTrimming="None"/>
+            <TextBlock x:Name="DetailFileSub"
+                       Text="Choose a file from the list"
+                       FontSize="12" Foreground="{StaticResource TextMuted}"
+                       Margin="0,3,0,0" TextWrapping="Wrap"/>
+
+            <!-- Detail rows — update on selection -->
+            <Border BorderBrush="{StaticResource BorderLight}"
+                    BorderThickness="1" CornerRadius="6"
+                    Padding="10,8" Margin="0,10,0,0"
+                    Background="{StaticResource SurfaceGray}">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto"/>
+                  <RowDefinition Height="Auto"/>
+                  <RowDefinition Height="Auto"/>
+                  <RowDefinition Height="Auto"/>
+                  <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Status"
+                           Style="{StaticResource Caption}" Margin="0,0,12,5"/>
+                <TextBlock x:Name="DetailStatus" Grid.Row="0" Grid.Column="1"
+                           Text="—" FontSize="12"
+                           Foreground="{StaticResource TextSecond}"
+                           HorizontalAlignment="Right"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Size"
+                           Style="{StaticResource Caption}" Margin="0,0,12,5"/>
+                <TextBlock x:Name="DetailSize" Grid.Row="1" Grid.Column="1"
+                           Text="—" FontSize="12"
+                           Foreground="{StaticResource TextSecond}"
+                           HorizontalAlignment="Right"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Found by"
+                           Style="{StaticResource Caption}" Margin="0,0,12,5"/>
+                <TextBlock x:Name="DetailMethod" Grid.Row="2" Grid.Column="1"
+                           Text="—" FontSize="12"
+                           Foreground="{StaticResource TextSecond}"
+                           HorizontalAlignment="Right"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Quality"
+                           Style="{StaticResource Caption}" Margin="0,0,12,5"/>
+                <TextBlock x:Name="DetailConf" Grid.Row="3" Grid.Column="1"
+                           Text="—" FontSize="12"
+                           Foreground="{StaticResource TextSecond}"
+                           HorizontalAlignment="Right"/>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Disk location"
+                           Style="{StaticResource Caption}" Margin="0,0,12,0"/>
+                <TextBlock x:Name="DetailOffset" Grid.Row="4" Grid.Column="1"
+                           Text="—" FontSize="11"
+                           FontFamily="{StaticResource MonoFont}"
+                           Foreground="{StaticResource TextSecond}"
+                           HorizontalAlignment="Right"/>
+              </Grid>
+            </Border>
+
+            <TextBlock x:Name="DetailPath"
+                       Text="" FontSize="11"
+                       Foreground="{StaticResource AccentText}"
+                       Margin="0,6,0,0" TextWrapping="Wrap"/>
+
+            <Border BorderBrush="{StaticResource BorderLight}"
+                    BorderThickness="1" CornerRadius="6"
+                    Background="{StaticResource SurfaceGray}"
+                    Padding="10" Margin="0,10,0,0">
+              <StackPanel>
+                <TextBlock Text="PREVIEW" Style="{StaticResource SectionLabel}"
+                           Margin="0,0,0,8"/>
+                <Border Height="130" Background="{StaticResource SurfaceWhite}"
+                        BorderBrush="{StaticResource BorderLight}"
+                        BorderThickness="1" CornerRadius="4">
+                  <Grid>
+                    <Image x:Name="PreviewImage"
+                           Stretch="Uniform"
+                           Visibility="Collapsed"
+                           Margin="6"/>
+                    <TextBox x:Name="PreviewText"
+                             Visibility="Collapsed"
+                             IsReadOnly="True"
+                             BorderThickness="0"
+                             Background="Transparent"
+                             TextWrapping="Wrap"
+                             VerticalScrollBarVisibility="Auto"
+                             FontSize="11"
+                             Padding="6"/>
+                    <TextBlock x:Name="PreviewStatus"
+                               Text="Select a file to preview it"
+                               Foreground="{StaticResource TextMuted}"
+                               FontSize="12"
+                               TextWrapping="Wrap"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Margin="10"/>
+                  </Grid>
+                </Border>
+              </StackPanel>
+            </Border>
+
+            <Button x:Name="RecoverFileButton"
+                    Content="Recover selected file(s)"
+                    Style="{StaticResource PrimaryButton}"
+                    HorizontalAlignment="Stretch"
+                    Height="34" Margin="0,12,0,5"
+                    IsEnabled="False"
+                    Click="OnRecoverSelected"/>
+            <Button x:Name="InspectFileButton"
+                    Content="Inspect this file on disk"
+                    Style="{StaticResource GhostButton}"
+                    HorizontalAlignment="Stretch"
+                    Height="30" FontSize="12" IsEnabled="False" Click="OnShowOnDisk"/>
+
+            <!-- Divider -->
+            <Border Height="1" Background="{StaticResource BorderLight}"
+                    Margin="0,16,0,14"/>
+
+            <!-- Drive info — updates when scan starts -->
+            <TextBlock Text="SEARCH LOCATION" Style="{StaticResource SectionLabel}"
+                       Margin="0,0,0,10"/>
+            <Grid Margin="0,0,0,5">
+              <TextBlock Text="Source" Style="{StaticResource Caption}"/>
+              <TextBlock x:Name="DetailDriveSource"
+                         HorizontalAlignment="Right" FontSize="11"
+                         Foreground="{StaticResource TextSecond}" Text="—"
+                         TextTrimming="CharacterEllipsis" MaxWidth="160"/>
+            </Grid>
+            <Grid Margin="0,0,0,5">
+              <TextBlock Text="Capacity" Style="{StaticResource Caption}"/>
+              <TextBlock x:Name="DetailDriveCapacity"
+                         HorizontalAlignment="Right" FontSize="11"
+                         Foreground="{StaticResource TextSecond}" Text="—"/>
+            </Grid>
+            <Grid Margin="0,0,0,5">
+              <TextBlock Text="Drive format" Style="{StaticResource Caption}"/>
+              <TextBlock x:Name="DetailDriveFs"
+                         HorizontalAlignment="Right" FontSize="11"
+                         Foreground="{StaticResource TextSecond}" Text="—"/>
+            </Grid>
+            <Grid>
+              <TextBlock Text="Drive health" Style="{StaticResource Caption}"/>
+              <TextBlock x:Name="DetailSmartLabel"
+                         HorizontalAlignment="Right" FontSize="11"
+                         FontWeight="SemiBold"
+                         Foreground="{StaticResource Success}" Text="Not checked"/>
+            </Grid>
+
+            <!-- Divider -->
+            <Border Height="1" Background="{StaticResource BorderLight}"
+                    Margin="0,14,0,14"/>
+
+            <!-- Scan session — live updates -->
+            <TextBlock Text="SCAN SUMMARY" Style="{StaticResource SectionLabel}"
+                       Margin="0,0,0,10"/>
+            <Grid Margin="0,0,0,5">
+              <TextBlock Text="Files found" Style="{StaticResource Caption}"/>
+              <TextBlock x:Name="DetailCountLabel"
+                         HorizontalAlignment="Right" FontSize="11"
+                         FontWeight="SemiBold"
+                         Foreground="{StaticResource TextSecond}" Text="0"/>
+            </Grid>
+            <Grid Margin="0,0,0,5">
+              <TextBlock Text="Deleted files found" Style="{StaticResource Caption}"/>
+              <TextBlock x:Name="DetailDeletedLabel"
+                         HorizontalAlignment="Right" FontSize="11"
+                         FontWeight="SemiBold"
+                         Foreground="{StaticResource Warn}" Text="0"/>
+            </Grid>
+            <Grid Margin="0,0,0,5">
+              <TextBlock Text="Search type" Style="{StaticResource Caption}"/>
+              <TextBlock x:Name="DetailModeLabel"
+                         HorizontalAlignment="Right" FontSize="11"
+                         Foreground="{StaticResource TextSecond}" Text="—"/>
+            </Grid>
+            <Grid>
+              <TextBlock Text="Output" Style="{StaticResource Caption}"/>
+              <TextBlock x:Name="DetailOutputLabel"
+                         HorizontalAlignment="Right" FontSize="11"
+                         Foreground="{StaticResource AccentText}"
+                         Text="—"
+                         TextTrimming="CharacterEllipsis" MaxWidth="160"/>
+            </Grid>
+
+          </StackPanel>
+        </ScrollViewer>
+      </Border>
+
+    </Grid>
+
+    <!-- STATUS BAR -->
+    <Border Grid.Row="2" Background="{StaticResource SurfaceWhite}"
+            BorderBrush="{StaticResource Border}" BorderThickness="0,1,0,0"
+            Padding="14,0">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock x:Name="StatusLabel" Grid.Column="0" Text="Ready."
+                   FontSize="11" Foreground="{StaticResource TextMuted}"
+                   VerticalAlignment="Center" Margin="0,0,14,0"/>
+        <Border Grid.Column="1" Height="3" CornerRadius="2"
+                Background="{StaticResource BorderLight}" VerticalAlignment="Center">
+          <Border x:Name="ProgressFill" HorizontalAlignment="Left"
+                  Width="0" CornerRadius="2"
+                  Background="{StaticResource Accent}"/>
+        </Border>
+        <TextBlock Grid.Column="2" FontSize="11"
+                   Foreground="{StaticResource TextMuted}"
+                   VerticalAlignment="Center" Margin="14,0,0,0"
+                   Text="Speed: —"/>
+      </Grid>
+    </Border>
+
+  </Grid>
+</Window>

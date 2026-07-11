@@ -1,0 +1,26 @@
+PowerRecover generated test image
+Image: TestRecoveryKit\PowerRecover_TestImage.img
+Size: 64 MB
+
+Create it with:
+powershell -ExecutionPolicy Bypass -File .\TestRecoveryKit\Generate-TestImage.ps1
+
+Expected useful files:
+- PDF: client_invoice_test.pdf
+- PNG: family_photo_test.png
+- JPG: holiday_photo_test.jpg
+- Word: customer_contract_test.docx
+- Excel: accounts_test.xlsx
+- PowerPoint: sales_deck_test.pptx
+
+Expected junk files that should be skipped:
+- windows_icon_junk.ico
+- debug_log_junk.log
+
+Recommended app test:
+1. Open PowerRecover.
+2. Choose Disk image.
+3. Select PowerRecover_TestImage.img.
+4. Choose an empty output folder.
+5. Use Full search - try everything, or Raw search - find files without names.
+6. Click Find my files.

@@ -1,0 +1,4 @@
+PowerRecover test note
+
+This is a normal text file inside a Documents folder.
+Expected behavior: the software should find it with a readable preview.

@@ -1,0 +1,32 @@
+<Window x:Class="PowerRecover.App.DriveDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Choose a Drive" Height="380" Width="520"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource AppBg}"
+        FontFamily="{StaticResource UIFont}">
+  <DockPanel Margin="20">
+    <TextBlock DockPanel.Dock="Top"
+               Text="DRIVES FOUND"
+               Style="{StaticResource SectionLabel}"
+               Margin="0,0,0,10"/>
+    <Border DockPanel.Dock="Bottom" Margin="0,12,0,0">
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+        <TextBox x:Name="ManualBox" Width="240" Margin="0,0,8,0"
+                 VerticalAlignment="Center"/>
+        <Button Content="Use typed path" Style="{StaticResource GhostButton}"
+                Click="OnManual" Margin="0,0,8,0"/>
+        <Button Content="Choose drive" Style="{StaticResource PrimaryButton}"
+                Click="OnSelect"/>
+      </StackPanel>
+    </Border>
+    <ListBox x:Name="DriveList"
+             Background="{StaticResource SurfaceWhite}"
+             Foreground="{StaticResource TextPrimary}"
+             BorderBrush="{StaticResource Border}"
+             BorderThickness="1"
+             FontFamily="{StaticResource MonoFont}"
+             FontSize="12"
+             Padding="6"/>
+  </DockPanel>
+</Window>
