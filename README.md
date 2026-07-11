@@ -24,7 +24,7 @@ folder.
 
 ![PowerRecover main screen](docs/screenshots/powerrecover-main-ui.png)
 
-![Preview and recovery panel](docs/screenshots/powerrecover-preview-panel.png)
+![Preview and recovery panel](docs/screenshots/powerrecover-scan-results.png)
 
 ## Safety First
 
